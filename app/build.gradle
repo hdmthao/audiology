@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.bigocoding.audiology.audimotion"
+        applicationId "com.bigocoding.audiology"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
@@ -44,4 +45,3 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-database:19.4.0'
 }
-

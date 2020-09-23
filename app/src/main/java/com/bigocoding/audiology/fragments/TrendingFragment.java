@@ -34,7 +34,7 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class TrendingFragment extends Fragment {
-    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyATZdsxUEIceoPQE8sGeBjU9sj4iSNq3zw";
+    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyC9l_ocweobg9Xh6l58qtBBsqiwNEx6N3s";
     private static String TRENDING_GET_URL = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=VN&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
 
     private RecyclerView mListVideos = null;

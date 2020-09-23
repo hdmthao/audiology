@@ -28,7 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     private final String contentLanguage = "en-US";
     private BiometricAssistant mBiometricAssistant;
     private DatabaseReference mDatabaseRef;
-    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         OnclickButtonListener();
 
         mBiometricAssistant = new BiometricAssistant(API_KEY, API_TOKEN);
+        mDatabaseRef =
     }
 
     private void startSignUp() {
@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(LoginActivity.this, SignupActivity.class));
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                 .putBoolean("isFirstRun", false)
-                .commit();
+                .apply();
     }
 
 

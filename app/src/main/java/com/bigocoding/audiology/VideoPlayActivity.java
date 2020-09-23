@@ -36,7 +36,7 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
-    public static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyATZdsxUEIceoPQE8sGeBjU9sj4iSNq3zw";
+    public static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyC9l_ocweobg9Xh6l58qtBBsqiwNEx6N3s";
     public static String VIDEO_COMMENT_URL = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&key=" + GOOGLE_YOUTUBE_API_KEY + "&videoId=";
     private YouTubePlayerView mYoutubePlayerView = null;
     private YouTubePlayer mYoutubePlayer = null;

@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SearchEvent;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,12 +36,6 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String userId = "usr_5abcb05344d141e398f1489b159d5ae5";
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static final String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     private FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://eastus.api.cognitive.microsoft.com/face/v1.0/", "c3964bae02b64e34810a5ba1a2df4207");
 
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 emotionJsonObj.put("contempt" , 0.0);
                 emotionJsonObj.put("disgust" , 0.0);
                 emotionJsonObj.put("fear" , 0.0);
-                populateListVideo();
+                populateListVideo("Son tung mtp");
                 return;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -143,15 +139,15 @@ public class MainActivity extends AppCompatActivity {
                     protected void onPostExecute(Face[] result) {
                         Log.d(TAG, emotionJsonObj.toString());
                         Toast.makeText(MainActivity.this, emotionJsonObj.toString(), Toast.LENGTH_LONG).show();
-                        populateListVideo();
+                        populateListVideo("Hay trao cho anh");
                     }
                 };
 
         detectTask.execute(inputStream);
     }
 
-    void populateListVideo() {
-        final PagerAdapter adapter = new com.bigocoding.audiology.adapters.PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+    void populateListVideo(String query) {
+        final PagerAdapter adapter = new com.bigocoding.audiology.adapters.PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), query);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -172,8 +168,24 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        return true;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                viewPager.setCurrentItem(0);
+                populateListVideo(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

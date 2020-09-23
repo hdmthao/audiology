@@ -13,10 +13,14 @@ import com.bigocoding.audiology.fragments.TrendingFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
+    TrendingFragment trendingFragment;
+    HistoryFragment historyFragment;
+    String mQuery;
 
-    public PagerAdapter(FragmentManager fm, int numOfTabs) {
+    public PagerAdapter(FragmentManager fm, int numOfTabs, String query) {
         super(fm);
         mNumOfTabs = numOfTabs;
+        mQuery = query;
     }
 
     @NonNull
@@ -24,14 +28,14 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                HomeFragment home = new HomeFragment();
+                HomeFragment home = HomeFragment.newInstance(mQuery);
                 return home;
             case 1:
-                TrendingFragment trending = new TrendingFragment();
-                return trending;
+                TrendingFragment trendingFragment = new TrendingFragment();
+                return trendingFragment;
             case 2:
-                HistoryFragment history = new HistoryFragment();
-                return history;
+                HistoryFragment historyFragment = new HistoryFragment();
+                return historyFragment;
             default:
                 return null;
         }

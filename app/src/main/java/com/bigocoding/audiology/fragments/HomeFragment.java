@@ -37,7 +37,7 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class HomeFragment extends Fragment {
-    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyATZdsxUEIceoPQE8sGeBjU9sj4iSNq3zw";
+    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyC9l_ocweobg9Xh6l58qtBBsqiwNEx6N3s";
     private static String HOME_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&regionCode=VN&type=video&key=" + GOOGLE_YOUTUBE_API_KEY + "&q=";
 
     private RecyclerView mListVideos = null;
@@ -49,6 +49,13 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static HomeFragment newInstance(String query) {
+        HomeFragment homeFragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString("query", query);
+        homeFragment.setArguments(args);
+        return homeFragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +63,9 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mListVideos = (RecyclerView) view.findViewById(R.id.listVideo);
         initList(mListData);
-        new RequestYoutubeAPI().execute("nhạc trẻ buồn");
+
+        Bundle args = getArguments();
+        new RequestYoutubeAPI().execute(args != null ? args.getString("query") : "trending");
         return view;
     }
 
@@ -65,9 +74,8 @@ public class HomeFragment extends Fragment {
         adapter = new VideoPostAdapter(getActivity(), mListData, new OnItemClickListener() {
             @Override
             public void onItemClick(YoutubeDataModel item) {
-                YoutubeDataModel youtubeDataModel = item;
                 Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
-                intent.putExtra(YoutubeDataModel.class.toString(), youtubeDataModel);
+                intent.putExtra(YoutubeDataModel.class.toString(), item);
                 startActivity(intent);
             }
         });

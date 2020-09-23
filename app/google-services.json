@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "773908377071",
+    "firebase_url": "https://audiology-290417.firebaseio.com",
+    "project_id": "audiology-290417",
+    "storage_bucket": "audiology-290417.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773908377071:android:43294d7f4bafef32e89a1a",
+        "android_client_info": {
+          "package_name": "com.bigocoding.audiology"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773908377071-sn7jremsppitjdijl3idovafp7aqbthv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkb5Y-foJiPedJfaH19Slj4xSooiccmLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773908377071-sn7jremsppitjdijl3idovafp7aqbthv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
