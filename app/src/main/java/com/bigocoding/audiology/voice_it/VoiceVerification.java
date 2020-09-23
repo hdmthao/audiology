@@ -1,4 +1,4 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 
 import android.Manifest;
@@ -7,23 +7,24 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.util.Log;
-
-import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.bigocoding.audiology.R;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import cz.msebera.android.httpclient.Header;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+
+import cz.msebera.android.httpclient.Header;
 
 public class VoiceVerification extends AppCompatActivity {
 

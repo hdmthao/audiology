@@ -2,13 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bigocoding.audiology">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
     <application
@@ -18,21 +20,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".VideoPlayActivity"></activity>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".FaceVerification">
-        </activity>
-        <activity android:name=".VoiceVerification">
-        </activity>
+        <activity android:name=".voice_it.FaceVerification"></activity>
+        <activity android:name=".voice_it.VoiceVerification"></activity>
         <activity android:name=".CreatePassword" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".VoiceEnrollment" />
+        <activity android:name=".voice_it.VoiceEnrollment" />
         <activity
-            android:label="@string/app_name"
-            android:name=".FaceEnrollment">
+            android:name=".voice_it.FaceEnrollment"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

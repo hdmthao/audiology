@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

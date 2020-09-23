@@ -1,7 +1,6 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -17,10 +16,10 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import com.bigocoding.audiology.R;
 import com.google.android.gms.vision.face.Face;
 
 import java.util.ArrayList;

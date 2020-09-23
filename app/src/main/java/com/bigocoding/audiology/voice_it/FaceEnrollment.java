@@ -1,4 +1,4 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,15 +13,18 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.bigocoding.audiology.R;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import cz.msebera.android.httpclient.Header;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +33,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+
+import cz.msebera.android.httpclient.Header;
 
 public class FaceEnrollment extends AppCompatActivity implements SensorEventListener {
 

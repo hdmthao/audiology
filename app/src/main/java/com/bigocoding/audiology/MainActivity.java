@@ -2,12 +2,11 @@ package com.bigocoding.audiology;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -18,11 +17,15 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 import com.microsoft.projectoxford.face.contract.Face;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
@@ -40,9 +43,18 @@ public class MainActivity extends AppCompatActivity {
 
     private FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://eastus.api.cognitive.microsoft.com/face/v1.0/", "c3964bae02b64e34810a5ba1a2df4207");
 
-    JSONObject emotionJsonObj;
+    private TabLayout tabLayout = null;
+    private ViewPager viewPager = null;
+    private JSONObject emotionJsonObj;
 
     private void initComponent() {
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+        tabLayout.addTab(tabLayout.newTab().setText("Home"));
+        tabLayout.addTab(tabLayout.newTab().setText("Trending"));
+        tabLayout.addTab(tabLayout.newTab().setText("History"));
+
         emotionJsonObj = new JSONObject();
     }
 
@@ -59,7 +71,23 @@ public class MainActivity extends AppCompatActivity {
     void predictEmotion() {
         Intent intent = this.getIntent();
         String face_url = intent.getStringExtra("url");
-        Bitmap bitmap = Utils.rotateBitmap(BitmapFactory.decodeFile(face_url));
+        if (face_url == null) {
+            try {
+                emotionJsonObj.put("happiness" , 1.0);
+                emotionJsonObj.put("sadness" , 0.0);
+                emotionJsonObj.put("surprise" , 0.0);
+                emotionJsonObj.put("neutral"  , 0.0);
+                emotionJsonObj.put("anger" , 0.0);
+                emotionJsonObj.put("contempt" , 0.0);
+                emotionJsonObj.put("disgust" , 0.0);
+                emotionJsonObj.put("fear" , 0.0);
+                populateListVideo();
+                return;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        Bitmap bitmap = rotateBitmap(BitmapFactory.decodeFile(face_url));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
@@ -115,16 +143,36 @@ public class MainActivity extends AppCompatActivity {
                     protected void onPostExecute(Face[] result) {
                         Log.d(TAG, emotionJsonObj.toString());
                         Toast.makeText(MainActivity.this, emotionJsonObj.toString(), Toast.LENGTH_LONG).show();
+                        populateListVideo();
                     }
                 };
 
         detectTask.execute(inputStream);
     }
 
+    void populateListVideo() {
+        final PagerAdapter adapter = new com.bigocoding.audiology.adapters.PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar, menu);
         return true;
     }
 
@@ -147,5 +195,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+    }
+
+    Bitmap rotateBitmap(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(-90);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth(), bitmap.getHeight(), true);
+
+        return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
     }
 }

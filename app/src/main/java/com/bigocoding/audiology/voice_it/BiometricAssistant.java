@@ -1,4 +1,4 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,6 +11,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.bigocoding.audiology.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BuildConfig;

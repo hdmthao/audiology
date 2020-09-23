@@ -83,4 +83,6 @@
     <string name="MUST_REGISTER_BIOMETRIC">Sorry, you must register your face and voice bimoetrics</string>
     <string name="MUST_REGISTER_VOICE">Sorry, you must register your voice bimoetrics too</string>
     <string name="MUST_REGISTER_FACE">Sorry, you must register your face too.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

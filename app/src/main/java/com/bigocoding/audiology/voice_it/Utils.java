@@ -1,4 +1,4 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.MultiProcessor;
@@ -126,13 +127,7 @@ class Utils {
         }
         return  true;
     }
-    static Bitmap rotateBitmap(Bitmap bitmap) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(-90);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth(), bitmap.getHeight(), true);
 
-        return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
-    }
     static boolean setBrightness(Activity activity, int brightness) {
 
         if (!Settings.System.canWrite(activity)) {

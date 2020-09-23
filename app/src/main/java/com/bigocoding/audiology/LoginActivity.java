@@ -1,11 +1,7 @@
 package com.bigocoding.audiology;
 
-import android.widget.Button;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bigocoding.audiology.voice_it.BiometricAssistant;
 import com.google.firebase.database.*;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import cz.msebera.android.httpclient.Header;
@@ -70,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 mBiometricAssistant.encapsulatedVoiceVerification(LoginActivity.this, userId, contentLanguage, phrase, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        goToGallery("none");
+                        goToGallery(null);
                     }
 
                     @Override
@@ -106,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText login_password = (EditText) findViewById(R.id.et_password);
         Log.d("MyString", login_password.getText().toString());
         if (login_password.getText().toString().equals("122333")) {
-            goToGallery("none");
+            goToGallery(null);
         } else
             Toast.makeText(LoginActivity.this, "Fail", Toast.LENGTH_SHORT).show();
     }

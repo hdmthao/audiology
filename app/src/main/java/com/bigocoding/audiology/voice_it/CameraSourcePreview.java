@@ -1,4 +1,4 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+
+import com.bigocoding.audiology.voice_it.CameraSource;
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;

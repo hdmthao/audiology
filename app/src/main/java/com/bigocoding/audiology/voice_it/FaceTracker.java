@@ -1,12 +1,14 @@
-package com.bigocoding.audiology;
+package com.bigocoding.audiology.voice_it;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
-import android.media.MediaPlayer;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.bigocoding.audiology.R;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
