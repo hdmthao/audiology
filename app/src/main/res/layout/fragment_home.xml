@@ -3,10 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bigocoding.audiology.fragments.HomeFragment">
-
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listVideo"/>
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recommendation"
+        android:fontFamily="@font/a"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        ></TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listVideo"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chi Pu Cu"
+        android:fontFamily="@font/a"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        ></TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listVideo1"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Soobin Hoàng Sơn"
+        android:fontFamily="@font/a"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        ></TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listVideo2"
+        />
+    </LinearLayout>
+
+
+
 
 </FrameLayout>

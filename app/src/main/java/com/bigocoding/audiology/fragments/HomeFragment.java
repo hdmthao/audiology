@@ -63,14 +63,15 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mListVideos = (RecyclerView) view.findViewById(R.id.listVideo);
         initList(mListData);
-
+        LinearLayoutManager horizontalLayoutManagaer = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mListVideos.setLayoutManager(horizontalLayoutManagaer);
         Bundle args = getArguments();
         new RequestYoutubeAPI().execute(args != null ? args.getString("query") : "trending");
         return view;
     }
 
     private void initList(ArrayList<YoutubeDataModel> mListData) {
-        mListVideos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mListVideos.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false));
         adapter = new VideoPostAdapter(getActivity(), mListData, new OnItemClickListener() {
             @Override
             public void onItemClick(YoutubeDataModel item) {
