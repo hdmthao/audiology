@@ -29,9 +29,8 @@ public class CreatePassword extends AppCompatActivity {
             Toast.makeText(this, "Sucessful", Toast.LENGTH_SHORT).show() ;
 
             savePasswordToFirebase(password.getText().toString());
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            Intent Favorite = new Intent (CreatePassword.this, FavoriteActivity.class);
+            startActivity(Favorite);
         }
         else
             Toast.makeText(this, "Password and Confirm password are not the same", Toast.LENGTH_SHORT).show() ;
