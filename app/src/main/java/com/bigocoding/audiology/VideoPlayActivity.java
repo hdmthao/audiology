@@ -1,18 +1,16 @@
 package com.bigocoding.audiology;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bigocoding.audiology.R;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bigocoding.audiology.adapters.CommentAdapter;
 import com.bigocoding.audiology.models.YoutubeCommentModel;
 import com.bigocoding.audiology.models.YoutubeDataModel;
@@ -38,15 +36,13 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
-    public static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAq4o0fBLbEtX56bhwVKq1A-yx9qhyNB5Y";
-    public static String VIDEO_COMMENT_URL = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&key=" + GOOGLE_YOUTUBE_API_KEY + "&videoId=";
+    public static final String TAG = VideoPlayActivity.class.getSimpleName();
+    public static final String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAq4o0fBLbEtX56bhwVKq1A-yx9qhyNB5Y";
+    public static final String VIDEO_COMMENT_URL = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&key=" + GOOGLE_YOUTUBE_API_KEY + "&videoId=";
     private static final String userId = "usr_5abcb05344d141e398f1489b159d5ae5";
 
     DatabaseReference mDatabaseRef;
-    private YouTubePlayerView mYoutubePlayerView = null;
     private YoutubeDataModel mYoutubeDataModel = null;
-    private ArrayList<YoutubeCommentModel> mListData = new ArrayList<>();
-    private CommentAdapter mAdapter = null;
     private RecyclerView mListVideos = null;
     TextView textViewName;
     TextView textViewDes;
@@ -65,8 +61,8 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
     void initComponents() {
         mYoutubeDataModel = getIntent().getParcelableExtra(YoutubeDataModel.class.toString());
 
-        mYoutubePlayerView = (YouTubePlayerView) findViewById(R.id.youtubePlayer);
-        mYoutubePlayerView.initialize(GOOGLE_YOUTUBE_API_KEY, this);
+        YouTubePlayerView youtubePlayerView = (YouTubePlayerView) findViewById(R.id.youtubePlayer);
+        youtubePlayerView.initialize(GOOGLE_YOUTUBE_API_KEY, this);
 
         textViewName = (TextView) findViewById(R.id.textViewName);
         textViewDes = (TextView) findViewById(R.id.textViewDes);
@@ -84,6 +80,7 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
     void saveHistory() {
         mDatabaseRef.push().setValue(mYoutubeDataModel);
     }
+
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
         youTubePlayer.setPlayerStateChangeListener(playerStateChangeListener);
@@ -161,7 +158,6 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         String link = ("https://www.youtube.com/watch?v=" + mYoutubeDataModel.getVideo_id());
-        // this is the text that will be shared
         sendIntent.putExtra(Intent.EXTRA_TEXT, link);
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, mYoutubeDataModel.getTitle()
                 + "Share");
@@ -170,6 +166,7 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
         startActivity(Intent.createChooser(sendIntent, "share"));
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class RequestYoutubeCommentAPI extends AsyncTask<Void, String, String> {
 
         @Override
@@ -181,12 +178,11 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
         protected String doInBackground(Void... params) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(VIDEO_COMMENT_URL + mYoutubeDataModel.getVideo_id());
-            Log.e("url: ", VIDEO_COMMENT_URL);
+            Log.d("TAG", "URL request comment: " + VIDEO_COMMENT_URL);
             try {
                 HttpResponse response = httpClient.execute(httpGet);
                 HttpEntity httpEntity = response.getEntity();
-                String json = EntityUtils.toString(httpEntity);
-                return json;
+                return EntityUtils.toString(httpEntity);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -199,8 +195,8 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
             if (response != null) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    Log.e("response", jsonObject.toString());
-                    mListData = parseJson(jsonObject);
+                    Log.d(TAG, jsonObject.toString());
+                    ArrayList<YoutubeCommentModel> mListData = parseJson(jsonObject);
                     initVideoList(mListData);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -211,7 +207,7 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
 
     public void initVideoList(ArrayList<YoutubeCommentModel> mListData) {
         mListVideos.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new CommentAdapter(this, mListData);
+        CommentAdapter mAdapter = new CommentAdapter(this, mListData);
         mListVideos.setAdapter(mAdapter);
     }
 

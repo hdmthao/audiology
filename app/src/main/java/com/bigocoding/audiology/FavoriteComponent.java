@@ -7,6 +7,4 @@ public class FavoriteComponent {
         this.image = image ;
         this.name = name ;
     }
-
-
 }

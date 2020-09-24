@@ -76,6 +76,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG, "Voice Enrolled");
                 voiceEnrolled = true;
+                findViewById(R.id.signup_voice).setVisibility(View.GONE);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -92,6 +93,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG, "Face enrolled");
                 faceErolled = true;
+                findViewById(R.id.signup_face).setVisibility(View.GONE);
             }
 
             @Override

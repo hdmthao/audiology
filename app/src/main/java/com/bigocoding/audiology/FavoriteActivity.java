@@ -12,13 +12,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class FavoriteActivity extends AppCompatActivity {
+    private static final String userId = "usr_5abcb05344d141e398f1489b159d5ae5";
+
+    DatabaseReference mDatabaseRef;
     ArrayList<FavoriteComponent> favoriteComponentArrayList = new ArrayList<>();
     ArrayList<String> userInfo = new ArrayList<>() ;
+    HashSet<String> listFavorite = new HashSet<>();
     FavoriteComponent fav ;
-    FavoriteComponent previous_fav ;
     int index;
     int count_favorite = 0 ;
     @Override
@@ -41,27 +48,31 @@ public class FavoriteActivity extends AppCompatActivity {
         favoriteComponentArrayList.add(new FavoriteComponent(R.drawable.amee, "Amee"));
         favoriteComponentArrayList.add(new FavoriteComponent(R.drawable.chipu, "Chi Pu"));
 
-
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference( userId+ "/favorite");
         fav = favoriteComponentArrayList.get(index);
     }
 
     public void FavoriteOnClick(View view) {
+        userInfo.add(fav.name) ;
+        listFavorite.add(fav.name);
+        Log.d("LOG", "LOG: " + fav.name);
         SwipeNext(view);
-        userInfo.add(previous_fav.name) ;
-        Log.d("LOG", "LOG: " + previous_fav.name);
         count_favorite++;
 
         if (count_favorite >= 3)
             ((Button)findViewById(R.id.skipbutton)).setVisibility(View.VISIBLE);
     }
     public void SkipOnClick(View view) {
-//        Send User Infomation
+        quitFavoriteActivity();
+    }
+
+    void quitFavoriteActivity() {
+        mDatabaseRef.setValue(userInfo);
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-
-
     }
+
     public void runAnimation(){
         ((TextView) findViewById(R.id.swipenext)).startAnimation(AnimationUtils.loadAnimation(this, R.anim.animation_to_left));
         ((ImageView) findViewById(R.id.favimg1)).startAnimation(AnimationUtils.loadAnimation(this, R.anim.animation_to_top));
@@ -74,6 +85,11 @@ public class FavoriteActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                if (listFavorite.contains(fav.name)) {
+                    ((Button) findViewById(R.id.btn_favorite)).setVisibility(View.GONE);
+                } else {
+                    ((Button) findViewById(R.id.btn_favorite)).setVisibility(View.VISIBLE);
+                }
                 ((TextView) findViewById(R.id.swipenext)).setText(fav.name);
                 ((ImageView) findViewById(R.id.favimg1)).setImageResource(fav.image);
                 ((ImageView) findViewById(R.id.favimg)).setImageResource(fav.image);
@@ -84,20 +100,18 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         }.start();
 
-
-//        ((ImageView) findViewById(R.id.favimg1)).setImageResource(fav.image);
     }
     public void SwipeNext(View view) {
         index++ ;
-        if (index == favoriteComponentArrayList.size())
-            index = 0;
+        if (index == favoriteComponentArrayList.size()) {
+            if (count_favorite >= 3) {
+                quitFavoriteActivity();
+            } else {
+                index = 0;
+            }
+        }
+
         fav = favoriteComponentArrayList.get(index);
-        if (index != 0)
-            previous_fav = favoriteComponentArrayList.get(index - 1);
-        else
-            previous_fav = favoriteComponentArrayList.get(favoriteComponentArrayList.size()-1);
         runAnimation();
-
-
     }
 }

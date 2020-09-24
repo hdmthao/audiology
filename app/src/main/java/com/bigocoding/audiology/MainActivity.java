@@ -18,28 +18,52 @@ import android.view.SearchEvent;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bigocoding.audiology.adapters.VideoPostAdapter;
+import com.bigocoding.audiology.models.YoutubeDataModel;
+import com.bigocoding.interfaces.OnItemClickListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 import com.microsoft.projectoxford.face.contract.Face;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://eastus.api.cognitive.microsoft.com/face/v1.0/", "c3964bae02b64e34810a5ba1a2df4207");
+    private static final String userId = "usr_5abcb05344d141e398f1489b159d5ae5";
 
+    DatabaseReference mDatabaseRef;
     private TabLayout tabLayout = null;
     private ViewPager viewPager = null;
     private JSONObject emotionJsonObj;
@@ -51,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Home"));
         tabLayout.addTab(tabLayout.newTab().setText("Trending"));
         tabLayout.addTab(tabLayout.newTab().setText("History"));
+
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference( userId+ "/favorite");
         emotionJsonObj = new JSONObject();
     }
 
@@ -77,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 emotionJsonObj.put("contempt" , 0.0);
                 emotionJsonObj.put("disgust" , 0.0);
                 emotionJsonObj.put("fear" , 0.0);
-                populateListVideo("Son tung mtp");
+                requestQuery();
                 return;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -139,13 +165,70 @@ public class MainActivity extends AppCompatActivity {
                     protected void onPostExecute(Face[] result) {
                         Log.d(TAG, emotionJsonObj.toString());
                         Toast.makeText(MainActivity.this, emotionJsonObj.toString(), Toast.LENGTH_LONG).show();
-                        populateListVideo("Hay trao cho anh");
+                        requestQuery();
                     }
                 };
 
         detectTask.execute(inputStream);
     }
 
+    void requestQuery() {
+
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                StringBuilder fav = new StringBuilder("favorite=");
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    fav.append(data.getValue(String.class)).append(',');
+                }
+                fav.deleteCharAt(fav.length() - 1);
+                String emotion = "";
+                try {
+                    emotion += "happiness="+emotionJsonObj.getDouble("happiness")+"&";
+                    emotion += "sadness="+emotionJsonObj.getDouble("sadness")+"&";
+                    emotion += "surprise="+emotionJsonObj.getDouble("surprise")+"&";
+                    emotion += "neutral="+emotionJsonObj.getDouble("neutral")+"&";
+                    emotion += "anger="+emotionJsonObj.getDouble("anger")+"&";
+                    emotion += "contempt="+emotionJsonObj.getDouble("contempt")+"&";
+                    emotion += "disgust="+emotionJsonObj.getDouble("disgust")+"&";
+                    emotion += "fear="+emotionJsonObj.getDouble("fear");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String url = "";
+                    url = "http://192.168.1.2:8000/generate?" + emotion + "&" + fav.toString();
+                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Log.d(TAG, response);
+                            JSONArray queryJSON = new JSONArray(response);
+                            String query = queryJSON.getJSONObject(0).getString("query");
+                            populateListVideo(query);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, error.toString());
+                        Log.e(TAG, "Generate query failed");
+                    }
+                });
+
+                queue.add(stringRequest);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     void populateListVideo(String query) {
         final PagerAdapter adapter = new com.bigocoding.audiology.adapters.PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), query);
         viewPager.setAdapter(adapter);
