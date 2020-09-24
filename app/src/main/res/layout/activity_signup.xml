@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:text="Hello, welcome you to Secret Album"
+                android:text="Hello, welcome you to Audiology"
                 android:textColor="#696969"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:text="Let's secret a secret forever"
+                android:text="Listen to your heart's beat"
                 android:textColor="#696969"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -58,7 +58,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="First, you must register your face and voice biometrics."
                 android:textColor="#696969"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
             <LinearLayout
                 android:layout_width="wrap_content"
