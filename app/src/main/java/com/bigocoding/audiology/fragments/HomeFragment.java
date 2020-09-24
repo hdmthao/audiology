@@ -41,8 +41,12 @@ public class HomeFragment extends Fragment {
     private static String HOME_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&regionCode=VN&type=video&key=" + GOOGLE_YOUTUBE_API_KEY + "&q=";
 
     private RecyclerView mListVideos = null;
+    private RecyclerView mListVideos1 = null;
+    private RecyclerView mListVideos2 = null;
     private VideoPostAdapter adapter = null;
     private ArrayList<YoutubeDataModel> mListData = new ArrayList<>();
+    private ArrayList<YoutubeDataModel> mListData1 = new ArrayList<>();
+    private ArrayList<YoutubeDataModel> mListData2 = new ArrayList<>();
 
 
     public HomeFragment() {
@@ -62,11 +66,16 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mListVideos = (RecyclerView) view.findViewById(R.id.listVideo);
+        mListVideos1 = (RecyclerView) view.findViewById(R.id.listVideo1);
+        mListVideos2 = (RecyclerView) view.findViewById(R.id.listVideo2);
         initList(mListData);
-        LinearLayoutManager horizontalLayoutManagaer = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mListVideos.setLayoutManager(horizontalLayoutManagaer);
+        initListFavorite(mListData1);
+        initListNormal(mListData2);
+
         Bundle args = getArguments();
         new RequestYoutubeAPI().execute(args != null ? args.getString("query") : "trending");
+        new RequestFavoriteYoutubeAPI().execute("top music hot 2020");
+        new RequestNormalYoutubeAPI().execute("Nhac son tung");
         return view;
     }
 
@@ -127,6 +136,118 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void initListFavorite(ArrayList<YoutubeDataModel> mListData) {
+        mListVideos1.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false));
+        adapter = new VideoPostAdapter(getActivity(), mListData, new OnItemClickListener() {
+            @Override
+            public void onItemClick(YoutubeDataModel item) {
+                Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+                intent.putExtra(YoutubeDataModel.class.toString(), item);
+                startActivity(intent);
+            }
+        });
+        mListVideos1.setAdapter(adapter);
+    }
+    private class RequestFavoriteYoutubeAPI extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = null;
+            try {
+                httpGet = new HttpGet(HOME_GET_URL +  URLEncoder.encode(params[0], StandardCharsets.UTF_8.toString()));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Log.e("URL", HOME_GET_URL + params[0]);
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity httpEntity = response.getEntity();
+                return EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            if (response != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Log.e("response", jsonObject.toString());
+                    mListData1 = parseVideoListFromResponse(jsonObject);
+                    initListFavorite(mListData1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void initListNormal(ArrayList<YoutubeDataModel> mListData) {
+        mListVideos2.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new VideoPostAdapter(getActivity(), mListData, new OnItemClickListener() {
+            @Override
+            public void onItemClick(YoutubeDataModel item) {
+                YoutubeDataModel youtubeDataModel = item;
+                Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+                intent.putExtra(YoutubeDataModel.class.toString(), youtubeDataModel);
+                startActivity(intent);
+            }
+        });
+        mListVideos2.setAdapter(adapter);
+    }
+    private class RequestNormalYoutubeAPI extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = null;
+            try {
+                httpGet = new HttpGet(HOME_GET_URL +  URLEncoder.encode(params[0], StandardCharsets.UTF_8.toString()));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Log.e("URL", HOME_GET_URL + params[0]);
+            try {
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity httpEntity = response.getEntity();
+                return EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+            if (response != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Log.e("response", jsonObject.toString());
+                    mListData2 = parseVideoListFromResponse(jsonObject);
+                    initListNormal(mListData2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     public ArrayList<YoutubeDataModel> parseVideoListFromResponse(JSONObject jsonObject) {
         ArrayList<YoutubeDataModel> mList = new ArrayList<>();
 
