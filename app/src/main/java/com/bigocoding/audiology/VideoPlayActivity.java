@@ -20,6 +20,8 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.loopj.android.http.HttpGet;
 
 import org.json.JSONArray;
@@ -36,10 +38,12 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
-    public static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyC9l_ocweobg9Xh6l58qtBBsqiwNEx6N3s";
+    public static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAq4o0fBLbEtX56bhwVKq1A-yx9qhyNB5Y";
     public static String VIDEO_COMMENT_URL = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&key=" + GOOGLE_YOUTUBE_API_KEY + "&videoId=";
+    private static final String userId = "usr_5abcb05344d141e398f1489b159d5ae5";
+
+    DatabaseReference mDatabaseRef;
     private YouTubePlayerView mYoutubePlayerView = null;
-    private YouTubePlayer mYoutubePlayer = null;
     private YoutubeDataModel mYoutubeDataModel = null;
     private ArrayList<YoutubeCommentModel> mListData = new ArrayList<>();
     private CommentAdapter mAdapter = null;
@@ -54,6 +58,8 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
         setContentView(R.layout.activity_video_play);
 
         initComponents();
+
+        saveHistory();
     }
 
     void initComponents() {
@@ -70,10 +76,14 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
         textViewDes.setText(mYoutubeDataModel.getDescription());
         textViewDate.setText(mYoutubeDataModel.getPublishedAt());
 
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference( userId+ "/history");
         mListVideos = (RecyclerView) findViewById(R.id.listVideo);
         new RequestYoutubeCommentAPI().execute();
     }
 
+    void saveHistory() {
+        mDatabaseRef.push().setValue(mYoutubeDataModel);
+    }
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
         youTubePlayer.setPlayerStateChangeListener(playerStateChangeListener);
@@ -81,13 +91,6 @@ public class VideoPlayActivity extends YouTubeBaseActivity implements YouTubePla
         if (!wasRestored) {
             youTubePlayer.cueVideo(mYoutubeDataModel.getVideo_id());
         }
-        mYoutubePlayer = youTubePlayer;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mYoutubePlayer.play();
-            }
-        }, 5000);
     }
 
     private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener() {

@@ -37,7 +37,7 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class HomeFragment extends Fragment {
-    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyC9l_ocweobg9Xh6l58qtBBsqiwNEx6N3s";
+    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAq4o0fBLbEtX56bhwVKq1A-yx9qhyNB5Y";
     private static String HOME_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&regionCode=VN&type=video&key=" + GOOGLE_YOUTUBE_API_KEY + "&q=";
 
     private RecyclerView mListVideos = null;

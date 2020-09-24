@@ -45,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         OnclickButtonListener();
 
         mBiometricAssistant = new BiometricAssistant(API_KEY, API_TOKEN);
-        mDatabaseRef =
     }
 
     private void startSignUp() {
